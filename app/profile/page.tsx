@@ -16,49 +16,26 @@ import { useAuth } from "@/contexts/auth-context";
 import { getUserMedia, type MediaItem } from "@/lib/media-service";
 import UploadForm from "./UploadForm";
 
-
-export default function ProfilePage() {
-  return (
-    <main className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Mi Perfil</h1>
-      <UploadForm />
-    </main>
-  );
-
-// Importa la interfaz User para tipar el usuario actual
-
 /**
- * Página de perfil de usuario.
+ * Página de perfil de usuario
  * Permite visualizar el perfil propio o de otro usuario,
  * mostrando sus medios (retos), con pestañas para diferentes categorías.
  */
 export default function ProfilePage() {
-  // Obtenemos el usuario actual desde contexto, puede ser User o null
   const { user } = useAuth();
-
-  // Convertimos con doble cast para compatibilidad TS (user puede ser null)
   const typedUser = user as unknown as User | undefined;
-
-  // Parámetros de búsqueda de la URL, para obtener userId si se muestra perfil ajeno
   const searchParams = useSearchParams();
   const profileUserId = searchParams.get("userId");
-
-  // Chequeamos si es el perfil propio comparando con el id del usuario autenticado
   const isOwnProfile = !profileUserId || profileUserId === typedUser?._id;
 
-  // Estado local para almacenar los medios del perfil mostrado
   const [userMedia, setUserMedia] = useState<MediaItem[]>([]);
-
-  // Estado de carga para controlar spinners o skeletons
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchUserMedia() {
-      // Solo fetch si tenemos un usuario con id definido
       if (typedUser?._id) {
         try {
           setLoading(true);
-          // Obtenemos la media para profileUserId si definida, sino para el usuario actual
           const media = await getUserMedia(profileUserId || typedUser._id);
           setUserMedia(media);
         } catch (error) {
@@ -71,11 +48,10 @@ export default function ProfilePage() {
     fetchUserMedia();
   }, [typedUser, profileUserId]);
 
-  // Función para reportar usuario, solo muestra alerta
   const handleReportUser = () => {
     if (confirm("¿Quieres reportar este perfil?")) {
       alert(
-        "Reporte de perfil enviado. Gracias por ayudarnos a mantener la comunidad segura.",
+        "Reporte de perfil enviado. Gracias por ayudarnos a mantener la comunidad segura."
       );
       // Aquí puedes implementar llamada al backend para reportar realmente
     }
@@ -84,7 +60,6 @@ export default function ProfilePage() {
   return (
     <ProtectedRoute>
       <div className="flex flex-col min-h-screen bg-black text-white">
-        {/* Header fijo con botones según tipo de perfil */}
         <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-black/80 backdrop-blur-md border-b border-zinc-800">
           <div className="flex items-center gap-2">
             <Link href="/">
@@ -130,15 +105,14 @@ export default function ProfilePage() {
           </div>
         </header>
 
-        {/* Contenido principal con padding para el header */}
         <main className="flex-1 pt-16 pb-20">
           <div className="p-4">
-            {/* Avatar y datos básicos */}
             <div className="flex items-center gap-4 mb-6">
               <Avatar className="h-20 w-20 border-4 border-purple-500">
                 <AvatarImage
                   src={
-                    typedUser?.photoURL ?? "/placeholder.svg?height=80&width=80"
+                    typedUser?.photoURL ??
+                    `/placeholder.svg?height=80&width=80`
                   }
                   alt={typedUser?.username ?? "@user"}
                 />
@@ -159,7 +133,6 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Estadísticas simplificadas */}
             <div className="flex justify-between mb-6 text-center">
               <div className="flex-1">
                 <p className="text-xl font-bold">{userMedia.length}</p>
@@ -175,7 +148,6 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Botones de acción */}
             <div className="flex gap-3 mb-6">
               {isOwnProfile ? (
                 <>
@@ -220,7 +192,6 @@ export default function ProfilePage() {
               )}
             </div>
 
-            {/* Pestañas para retos */}
             <Tabs defaultValue="challenges" className="w-full">
               <TabsList className="w-full bg-zinc-900 border-b border-zinc-800 rounded-none h-12">
                 <TabsTrigger
@@ -247,10 +218,7 @@ export default function ProfilePage() {
                 {loading ? (
                   <div className="grid grid-cols-3 gap-1">
                     {[1, 2, 3, 4, 5, 6].map((item) => (
-                      <Skeleton
-                        key={item}
-                        className="aspect-square bg-zinc-800"
-                      />
+                      <Skeleton key={item} className="aspect-square bg-zinc-800" />
                     ))}
                   </div>
                 ) : userMedia.length > 0 ? (
@@ -260,10 +228,10 @@ export default function ProfilePage() {
                         <Image
                           src={
                             item.type === "image"
-                              ? (item.mediaUrl ??
-                                `/placeholder.svg?height=150&width=150`)
-                              : (item.thumbnailUrl ??
-                                `/placeholder.svg?height=150&width=150`)
+                              ? item.mediaUrl ??
+                                `/placeholder.svg?height=150&width=150`
+                              : item.thumbnailUrl ??
+                                `/placeholder.svg?height=150&width=150`
                           }
                           alt={item.title}
                           fill
@@ -330,6 +298,7 @@ export default function ProfilePage() {
               </TabsContent>
             </Tabs>
           </div>
+          <UploadForm />
         </main>
       </div>
     </ProtectedRoute>
