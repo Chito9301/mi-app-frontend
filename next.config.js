@@ -1,28 +1,36 @@
-const path = require("path");
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
   images: {
-    unoptimized: true, // No optimiza imágenes, útil si usas CDN
+    unoptimized: true, // útil si usas CDN o Cloudinary
   },
-  allowedDevOrigins: ["http://10.127.84.98", "http://localhost:3000"],
+  allowedDevOrigins: ["http://localhost:3000"], // puedes agregar más si es necesario
   typescript: {
-    ignoreBuildErrors: false, // Detener build si hay errores TS
+    ignoreBuildErrors: false, // detener build si hay errores TS
   },
   eslint: {
-    dirs: ["pages", "components", "lib", "hooks"], // Carpetas donde correr ESLint
-    ignoreDuringBuilds: true, // Ignorar errores ESLint para que build no falle
+    dirs: ["pages", "components", "lib", "hooks"],
+    ignoreDuringBuilds: true, // build no falla por ESLint
   },
   webpack(config) {
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
-      "@": path.resolve(__dirname, "frontend"),
+      "@": path.resolve(__dirname, "frontend"), // alias para imports
     };
     return config;
   },
-
-  // ⚡ FIX para monorepo y lockfiles
-  outputFileTracingRoot: path.join(__dirname, ".."),
+  experimental: {
+    serverActions: true,
+  },
+  // ⚡ FIX monorepo o path root
+  outputFileTracingRoot: path.join(__dirname),
 };
 
-module.exports = nextConfig;
+export default nextConfig;
