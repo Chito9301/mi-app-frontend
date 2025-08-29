@@ -1,5 +1,5 @@
 {
-  "//": "TS config frontend independiente (Next.js)",
+  "//": "TS config frontend independiente (Next.js) corregido",
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
@@ -8,7 +8,7 @@
       "dom.iterable",
       "esnext"
     ],
-    "allowJs": true,
+    "allowJs": false,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -41,15 +41,14 @@
     ]
   },
   "include": [
-    "next-env.d.ts",
-    "global.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.js",
-    "**/*.jsx",
+    "global.d.ts",
+    "next-env.d.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".next"
   ]
 }
