@@ -86,6 +86,6 @@
     "typescript": "^5.9.2"
   },
   "engines": {
-    "node": "18.x"
+    "node": "20.9.0"
   }
 }
