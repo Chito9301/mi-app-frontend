@@ -19,8 +19,5 @@
     "CLOUDINARY_API_SECRET": "Uj8_GxQF28m73P6kV5gMgIb-zuI",
     "CLOUDINARY_UPLOAD_PRESET": "reballing_unsigned",
     "JWT_SECRET": "sG7#k9L!vQ2@dR8^wT5$zX1&mB6*oP0+fY4%hN3!cJ7@eU9^rV2$gM8&nK1*pL5"
-  },
-  "node": {
-    "version": "20.x"
   }
 }
