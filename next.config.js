@@ -20,9 +20,15 @@ const nextConfig = {
     };
     return config;
   },
-
-  // ⚡ FIX para monorepo y lockfiles
-  //outputFileTracingRoot: path.join(__dirname, ".."),
+  async redirects() {
+    return [
+      {
+        source: "/auth/recuperar",
+        destination: "/auth/forgot-password",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
