@@ -95,7 +95,7 @@ export default function TrendingPage() {
       <div className="space-y-4">
         {mediaList.map((item) => (
           <Link
-            href={`/media/${item.id}`}
+            href={`/api/media/${item.id}`}
             key={item.id}
             aria-label={`Ver media: ${item.title}`}
           >

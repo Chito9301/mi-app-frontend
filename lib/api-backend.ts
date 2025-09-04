@@ -133,14 +133,14 @@ export async function getUserProfile() {
  * Obtiene media por id.
  */
 export async function fetchMediaById(id: string) {
-  return apiFetch(`/media/${id}`, { method: "GET" }, false);
+  return apiFetch(`/api/media/${id}`, { method: "GET" }, false);
 }
 
 /**
  * Obtiene comentarios de media específico.
  */
 export async function fetchCommentsByMediaId(mediaId: string) {
-  return apiFetch(`/media/${mediaId}/comments`, { method: "GET" }, false);
+  return apiFetch(`/api/media/${mediaId}/comments`, { method: "GET" }, false);
 }
 
 /**
@@ -157,7 +157,7 @@ export async function postComment(
   },
 ) {
   return apiFetch(
-    `/media/${mediaId}/comments`,
+    `/api/media/${mediaId}/comments`,
     {
       method: "POST",
       body: JSON.stringify(comment),
@@ -177,5 +177,5 @@ export async function getUserMedia(userId: string) {
  * Obtiene media trending.
  */
 export async function getTrendingMedia() {
-  return apiFetch(`/media/trending`, { method: "GET" }, false);
+  return apiFetch(`/api/media/trending`, { method: "GET" }, false);
 }

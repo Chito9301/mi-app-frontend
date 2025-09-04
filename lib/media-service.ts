@@ -95,7 +95,7 @@ export async function uploadMedia(
   const mediaUrl = uploadResult.secure_url;
 
   try {
-    await fetch(`${API_URL}/media/register`, {
+    await fetch(`${API_URL}/api/media/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -124,7 +124,7 @@ export async function getTrendingMedia(
 ): Promise<MediaItem[]> {
   try {
     const res = await fetch(
-      `${API_URL}/media/trending?orderBy=${orderBy}&limit=${limit}`,
+      `${API_URL}/api/media/trending?orderBy=${orderBy}&limit=${limit}`,
     );
 
     if (!res.ok) throw new Error("Error obteniendo trending media");
@@ -142,7 +142,7 @@ export async function getTrendingMedia(
  */
 export async function getRecentMedia(limit: number = 10): Promise<MediaItem[]> {
   try {
-    const res = await fetch(`${API_URL}/media/recent?limit=${limit}`);
+    const res = await fetch(`${API_URL}/api/media/recent?limit=${limit}`);
 
     if (!res.ok) throw new Error("Error obteniendo media reciente");
 
@@ -159,7 +159,7 @@ export async function getRecentMedia(limit: number = 10): Promise<MediaItem[]> {
  */
 export async function getUserMedia(userId: string): Promise<MediaItem[]> {
   try {
-    const res = await fetch(`${API_URL}/media/user/${userId}`);
+    const res = await fetch(`${API_URL}/api/media/user/${userId}`);
 
     if (!res.ok) throw new Error("Error obteniendo media de usuario");
 
@@ -178,7 +178,7 @@ export async function incrementMediaStats(
   stat: "views" | "likes" | "comments",
 ): Promise<void> {
   try {
-    const res = await fetch(`${API_URL}/media/${mediaId}/increment`, {
+    const res = await fetch(`${API_URL}/api/media/${mediaId}/increment`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ stat }),
@@ -199,7 +199,7 @@ export async function fetchMediaById(
   mediaId: string,
 ): Promise<MediaItem | null> {
   try {
-    const res = await fetch(`${API_URL}/media/${mediaId}`);
+    const res = await fetch(`${API_URL}/api/media/${mediaId}`);
 
     if (!res.ok) {
       if (res.status === 404) return null;
