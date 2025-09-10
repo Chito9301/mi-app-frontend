@@ -34,8 +34,7 @@ export interface MediaItem {
 
 /** Configuración para subida a Cloudinary */
 const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`;
-const CLOUDINARY_UPLOAD_PRESET =
-  process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
 if (!CLOUDINARY_UPLOAD_URL || !CLOUDINARY_UPLOAD_PRESET) {
   throw new Error(
@@ -127,9 +126,14 @@ export async function getTrendingMedia(
       `${API_URL}/api/media/trending?orderBy=${orderBy}&limit=${limit}`,
     );
 
-    if (!res.ok) throw new Error("Error obteniendo trending media");
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      const message = errorData?.error || "Error obteniendo trending media";
+      throw new Error(message);
+    }
 
-    return await res.json();
+    const json = await res.json();
+    return json.data ?? [];
   } catch (error) {
     console.warn("getTrendingMedia fallback vacío:", error);
     return [];
@@ -146,7 +150,8 @@ export async function getRecentMedia(limit: number = 10): Promise<MediaItem[]> {
 
     if (!res.ok) throw new Error("Error obteniendo media reciente");
 
-    return await res.json();
+    const json = await res.json();
+    return json.data ?? [];
   } catch (error) {
     console.warn("getRecentMedia fallback vacío:", error);
     return [];
@@ -163,7 +168,8 @@ export async function getUserMedia(userId: string): Promise<MediaItem[]> {
 
     if (!res.ok) throw new Error("Error obteniendo media de usuario");
 
-    return await res.json();
+    const json = await res.json();
+    return json.data ?? [];
   } catch (error) {
     console.warn("getUserMedia fallback vacío:", error);
     return [];
