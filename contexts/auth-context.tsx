@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { loginUser, registerUser } from "@/lib/api-backend";
 
 /**
  * Tipo que define la estructura del usuario
@@ -61,35 +62,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.message || "Error al iniciar sesión");
+    // Modificación: indentación y tipado de error
+    try {
+  const { user } = await loginUser({ email, password }); // Modificación: eliminada variable 'token' no usada
+  setUser(user);
+    } catch (error) {
+      // Modificación: tipado seguro para error
+      if (error instanceof Error) {
+        throw new Error(error.message || "Error al iniciar sesión");
+      } else {
+        throw new Error("Error al iniciar sesión");
+      }
     }
-
-    const data = await res.json();
-    setUser(data.user);
   };
 
   const signUp = async (username: string, email: string, password: string) => {
-    const res = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password }),
-    });
-
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.message || "Error al registrarse");
+    // Modificación: indentación y tipado de error
+    try {
+      const data = await registerUser({ username, email, password });
+      setUser(data.user);
+    } catch (error) {
+      // Modificación: tipado seguro para error
+      if (error instanceof Error) {
+        throw new Error(error.message || "Error al registrarse");
+      } else {
+        throw new Error("Error al registrarse");
+      }
     }
-
-    const data = await res.json();
-    setUser(data.user);
   };
 
   const logout = async () => {
