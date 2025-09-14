@@ -1,5 +1,3 @@
-// app/signup/page.tsx (o pages/signup.tsx si usas pages router)
-
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -22,7 +20,7 @@ export default function SignUpPage() {
     setError(null);
 
     try {
-      await signUp(email, password, username);
+      await signUp({ email, password, username });
       router.push("/login"); // redirige a login tras registro exitoso
     } catch (err: any) {
       setError(err.message || "Error al registrarse");
