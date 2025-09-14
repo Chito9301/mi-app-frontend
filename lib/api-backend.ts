@@ -123,7 +123,7 @@ export async function registerUser(user: {
   email: string;
   password: string;
 }) {
-  return apiFetch("/api/auth/signup", {
+  return apiFetch("/api/auth/register", {
     method: "POST",
     body: JSON.stringify(user),
   });
