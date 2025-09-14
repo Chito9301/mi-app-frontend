@@ -1,37 +1,30 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://backedn-express.vercel.app";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://backedn-express.vercel.app/api";
 
 if (!API_URL) {
   throw new Error(
-    "Falta la variable de entorno NEXT_PUBLIC_API_URL (ruta base del backend)",
+    "Falta la variable de entorno NEXT_PUBLIC_API_URL (ruta base del backend)"
   );
 }
 
 const TOKEN_KEY = "auth_token";
 
-/** Guarda token JWT en almacenamiento local */
+// --- Manejo del token ---
 export function saveToken(token: string) {
   localStorage.setItem(TOKEN_KEY, token);
 }
-
-/** Obtiene el token JWT guardado */
 export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
 }
-
-/** Elimina el token, p. ej. al hacer logout */
 export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
 }
 
-/**
- * Función central para hacer peticiones al backend.
- * Añade token si la ruta requiere autenticación.
- * Lanza error con mensaje adecuado si la respuesta no es OK.
- */
+// --- Función central ---
 export async function apiFetch<T = any>(
   endpoint: string,
   options: RequestInit = {},
-  authRequired: boolean = false,
+  authRequired: boolean = false
 ): Promise<T> {
   const url = `${API_URL}${endpoint}`;
   let headers: HeadersInit = {
@@ -42,10 +35,7 @@ export async function apiFetch<T = any>(
   if (authRequired) {
     const token = getToken();
     if (!token) throw new Error("No autenticado");
-    headers = {
-      ...headers,
-      Authorization: `Bearer ${token}`,
-    };
+    headers = { ...headers, Authorization: `Bearer ${token}` };
   }
 
   const res = await fetch(url, { ...options, headers });
@@ -56,35 +46,19 @@ export async function apiFetch<T = any>(
       const data = await res.json();
       errorMsg = data.error || data.message || errorMsg;
     } catch {
-      // No JSON válido en error
+      // No JSON válido
     }
     throw new Error(errorMsg);
   }
 
-  if (res.status === 204) {
-    return null as T;
-  }
+  if (res.status === 204) return null as T;
 
   return res.json() as Promise<T>;
 }
 
-// --- Tipos exportados ---
+// --- Funciones específicas ---
 
-export interface Comment {
-  id: string;
-  userId: string;
-  username: string;
-  userPhotoURL?: string;
-  text: string;
-  createdAt: string;
-}
-
-// --- Funciones específicas para endpoints comunes ---
-
-/**
- * 🔹 Login de usuario.
- * Ahora recibe un objeto { email, password } en lugar de dos args.
- */
+// 🔹 Login
 export async function loginUser({
   email,
   password,
@@ -101,81 +75,29 @@ export async function loginUser({
   });
 }
 
-/**
- * Registro de usuario nuevo.
- */
+// 🔹 Registro
 export async function registerUser(user: {
   username: string;
   email: string;
   password: string;
 }) {
-  return apiFetch("/auth/signup", {
+  return apiFetch("/auth/register", {
     method: "POST",
     body: JSON.stringify(user),
   });
 }
 
-/**
- * Logout del usuario (si backend lo soporta).
- */
-export async function logout() {
-  return apiFetch("/auth/logout", { method: "POST" }, true);
-}
-
-/**
- * Obtiene perfil del usuario autenticado.
- */
+// 🔹 Perfil usuario
 export async function getUserProfile() {
-  return apiFetch("/user/profile", { method: "GET" }, true);
+  return apiFetch("/users/profile", { method: "GET" }, true);
 }
 
-/**
- * Obtiene media por id.
- */
+// 🔹 Media por ID
 export async function fetchMediaById(id: string) {
-  return apiFetch(`/api/media/${id}`, { method: "GET" }, false);
+  return apiFetch(`/media/${id}`, { method: "GET" }, false);
 }
 
-/**
- * Obtiene comentarios de media específico.
- */
-export async function fetchCommentsByMediaId(mediaId: string) {
-  return apiFetch(`/api/media/${mediaId}/comments`, { method: "GET" }, false);
-}
-
-/**
- * Añade comentario a un medio.
- */
-export async function postComment(
-  mediaId: string,
-  comment: {
-    userId: string;
-    username: string;
-    userPhotoURL?: string;
-    text: string;
-    createdAt: string;
-  },
-) {
-  return apiFetch(
-    `/api/media/${mediaId}/comments`,
-    {
-      method: "POST",
-      body: JSON.stringify(comment),
-    },
-    true,
-  );
-}
-
-/**
- * Obtiene medios de un usuario.
- */
-export async function getUserMedia(userId: string) {
-  return apiFetch(`/users/${userId}/media`, { method: "GET" }, false);
-}
-
-/**
- * Obtiene media trending.
- */
+// 🔹 Trending
 export async function getTrendingMedia() {
-  return apiFetch(`/api/media/trending`, { method: "GET" }, false);
+  return apiFetch(`/media/trending`, { method: "GET" }, false);
 }
