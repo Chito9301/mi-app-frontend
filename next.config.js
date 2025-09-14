@@ -23,7 +23,7 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: "/auth/recuperar",
+        source: "/auth/forgot-password",
         destination: "/auth/forgot-password",
         permanent: true,
       },
