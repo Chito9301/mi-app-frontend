@@ -13,15 +13,12 @@ import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/auth-context";
 
 /**
- * Página de Registro.
- *
- * Esta página permite crear una cuenta con email, username y contraseña.
- * Se eliminó el uso de 'isConfigured' para evitar errores de tipo en build,
- * asumiendo que la configuración del entorno ya está lista.
- * Se mantienen validaciones básicas de contraseña, mensajes de error y spinner.
+ * Página de Registro actualizada: 
+ * - Campo confirmar contraseña agregado
+ * - Validación de contraseñas iguales y longitud mínima
+ * - Corrección: signUp recibe objeto con keys para evitar cruce
  */
 export default function RegisterPage() {
-  // Estados para inputs, error y loading
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -30,23 +27,22 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Extraemos solo signUp del contexto auth
   const { signUp } = useAuth();
   const router = useRouter();
 
-  // Handler para registro
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
-    // Validaciones básicas
+    // Validar contraseñas iguales
     if (password !== confirmPassword) {
       setError("Las contraseñas no coinciden.");
       setIsLoading(false);
       return;
     }
 
+    // Validar longitud contraseña
     if (password.length < 6) {
       setError("La contraseña debe tener al menos 6 caracteres.");
       setIsLoading(false);
@@ -54,37 +50,33 @@ export default function RegisterPage() {
     }
 
     try {
-      // Llamada a signUp, ajusta parámetros según implementación real
-      await signUp(email, password, username);
+      // Llamar a signUp con objeto para no mezclar campos
+      await signUp({ email, password, username });
       router.push("/");
     } catch (error: any) {
       console.error("Registration error:", error);
       if (error.code === "auth/email-already-in-use") {
         setError(
-          "Este correo electrónico ya está en uso. Por favor utiliza otro o inicia sesión.",
+          "Este correo electrónico ya está en uso. Por favor utiliza otro o inicia sesión."
         );
       } else if (error.code === "auth/weak-password") {
         setError(
-          "La contraseña es demasiado débil. Debe tener al menos 6 caracteres.",
+          "La contraseña es demasiado débil. Debe tener al menos 6 caracteres."
         );
       } else if (error.code === "auth/invalid-email") {
         setError("Por favor ingresa un correo electrónico válido.");
       } else {
-        setError(
-          "Ocurrió un error al registrarte. Por favor intenta de nuevo.",
-        );
+        setError("Ocurrió un error al registrarte. Por favor intenta de nuevo.");
       }
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Render principal (REMOVIDO chequeo y UI basada en isConfigured)
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-purple-900 to-black text-white">
       <main className="flex-1 flex flex-col items-center justify-center p-6">
         <div className="w-full max-w-md space-y-8">
-          {/* Encabezado */}
           <div className="flex flex-col items-center text-center">
             <AppIcon size={80} />
             <h1 className="mt-4 text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
@@ -93,7 +85,6 @@ export default function RegisterPage() {
             <p className="mt-2 text-zinc-400">Únete a la comunidad de Challz</p>
           </div>
 
-          {/* Mensajes de error */}
           {error && (
             <Alert
               variant="destructive"
@@ -104,7 +95,6 @@ export default function RegisterPage() {
             </Alert>
           )}
 
-          {/* Formulario de registro */}
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-sm text-zinc-400">
@@ -174,10 +164,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label
-                htmlFor="confirmPassword"
-                className="text-sm text-zinc-400"
-              >
+              <Label htmlFor="confirmPassword" className="text-sm text-zinc-400">
                 Repetir Contraseña
               </Label>
               <Input
