@@ -3,26 +3,19 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { loginUser, registerUser } from "@/lib/api-backend";
 
-/**
- * Tipo que define la estructura del usuario
- */
 export interface User {
   id: string;
   username: string;
   email: string;
-  photoURL?: string; // Añadido para evitar error en MediaUpload
-  // Puedes agregar otros campos que tu backend envíe aquí
+  photoURL?: string; // Para futuro uso
 }
 
-/**
- * Define el tipo completo del contexto de autenticación
- */
 export interface AuthContextType {
   user: User | null;
-  loading: boolean; // Carga inicial o solicitud en progreso
-  isConfigured: boolean; // Indica que la carga inicial terminó (user ya está definido o null)
+  loading: boolean;
+  isConfigured: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (username: string, email: string, password: string) => Promise<void>;
+  signUp: (data: { username: string; email: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   uploadImage: (file: File) => Promise<string>;
@@ -30,17 +23,11 @@ export interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-/**
- * Provider del contexto de autenticación
- */
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true); // Proceso activo de carga
-  const [isConfigured, setIsConfigured] = useState(false); // Proceso inicial finalizado
+  const [loading, setLoading] = useState(true);
+  const [isConfigured, setIsConfigured] = useState(false);
 
-  // Al montar, intenta obtener el usuario actual desde API
   useEffect(() => {
     async function fetchUser() {
       try {
@@ -55,19 +42,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setUser(null);
       } finally {
         setLoading(false);
-        setIsConfigured(true); // Indicamos que la carga inicial terminó
+        setIsConfigured(true);
       }
     }
     fetchUser();
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    // Modificación: indentación y tipado de error
     try {
-  const { user } = await loginUser({ email, password }); // Modificación: eliminada variable 'token' no usada
-  setUser(user);
+      const { user } = await loginUser({ email, password });
+      setUser(user);
     } catch (error) {
-      // Modificación: tipado seguro para error
       if (error instanceof Error) {
         throw new Error(error.message || "Error al iniciar sesión");
       } else {
@@ -76,13 +61,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const signUp = async (username: string, email: string, password: string) => {
-    // Modificación: indentación y tipado de error
+  const signUp = async (data: { username: string; email: string; password: string }) => {
     try {
-      const data = await registerUser({ username, email, password });
-      setUser(data.user);
+      const response = await registerUser(data);
+      setUser(response.user);
     } catch (error) {
-      // Modificación: tipado seguro para error
       if (error instanceof Error) {
         throw new Error(error.message || "Error al registrarse");
       } else {
@@ -105,9 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (!res.ok) {
       const errorData = await res.json();
-      throw new Error(
-        errorData.message || "Error al solicitar cambio de contraseña",
-      );
+      throw new Error(errorData.message || "Error al solicitar cambio de contraseña");
     }
   };
 
@@ -116,7 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     formData.append("file", file);
     formData.append(
       "upload_preset",
-      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "",
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""
     );
     formData.append("folder", "tu_carpeta");
 
@@ -125,7 +106,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       {
         method: "POST",
         body: formData,
-      },
+      }
     );
 
     if (!res.ok) throw new Error("Error al subir imagen a Cloudinary");
@@ -152,10 +133,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-/**
- * Hook para consumir el contexto de autenticación.
- * Lanza error si se usa fuera del Provider.
- */
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) throw new Error("useAuth debe usarse dentro de AuthProvider");
