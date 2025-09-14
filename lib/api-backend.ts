@@ -99,6 +99,7 @@ export interface Comment {
 // ================================
 
 /** 🔹 Login de usuario */
+// Modificado: la ruta ahora es /api/auth/login para apuntar al backend Express
 export async function loginUser({
   email,
   password,
@@ -109,27 +110,29 @@ export async function loginUser({
   return apiFetch<{
     token: string;
     user: { id: string; username: string; email: string };
-  }>("/auth/login", {
+  }>("/api/auth/login", {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
 }
 
 /** Registro de usuario nuevo */
+// Modificado: la ruta ahora es /api/auth/signup para apuntar al backend Express
 export async function registerUser(user: {
   username: string;
   email: string;
   password: string;
 }) {
-  return apiFetch("/auth/signup", {
+  return apiFetch("/api/auth/signup", {
     method: "POST",
     body: JSON.stringify(user),
   });
 }
 
 /** Logout del usuario (si backend lo soporta) */
+// Modificado: la ruta ahora es /api/auth/logout para apuntar al backend Express
 export async function logout() {
-  return apiFetch("/auth/logout", { method: "POST" }, true);
+  return apiFetch("/api/auth/logout", { method: "POST" }, true);
 }
 
 /** Obtiene perfil del usuario autenticado */
@@ -177,3 +180,4 @@ export async function getUserMedia(userId: string) {
 export async function getTrendingMedia() {
   return apiFetch(`/api/media/trending`, { method: "GET" }, false);
 }
+// Comentarios agregados en cada función modificada para mayor claridad
