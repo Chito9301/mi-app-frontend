@@ -117,7 +117,7 @@ export async function loginUser({
 }
 
 /** Registro de usuario nuevo */
-// Modificado: la ruta ahora es /api/auth/signup para apuntar al backend Express
+// Modificado: la ruta ahora es /api/auth/register para apuntar al backend Express
 export async function registerUser(user: {
   username: string;
   email: string;
