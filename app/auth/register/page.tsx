@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/auth-context";
 
 /**
- * Página de Registro actualizada: 
+ * Página de Registro actualizada:
  * - Campo confirmar contraseña agregado
  * - Validación de contraseñas iguales y longitud mínima
  * - Corrección: signUp recibe objeto con keys para evitar cruce
@@ -57,16 +57,18 @@ export default function RegisterPage() {
       console.error("Registration error:", error);
       if (error.code === "auth/email-already-in-use") {
         setError(
-          "Este correo electrónico ya está en uso. Por favor utiliza otro o inicia sesión."
+          "Este correo electrónico ya está en uso. Por favor utiliza otro o inicia sesión.",
         );
       } else if (error.code === "auth/weak-password") {
         setError(
-          "La contraseña es demasiado débil. Debe tener al menos 6 caracteres."
+          "La contraseña es demasiado débil. Debe tener al menos 6 caracteres.",
         );
       } else if (error.code === "auth/invalid-email") {
         setError("Por favor ingresa un correo electrónico válido.");
       } else {
-        setError("Ocurrió un error al registrarte. Por favor intenta de nuevo.");
+        setError(
+          "Ocurrió un error al registrarte. Por favor intenta de nuevo.",
+        );
       }
     } finally {
       setIsLoading(false);
@@ -164,7 +166,10 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-sm text-zinc-400">
+              <Label
+                htmlFor="confirmPassword"
+                className="text-sm text-zinc-400"
+              >
                 Repetir Contraseña
               </Label>
               <Input

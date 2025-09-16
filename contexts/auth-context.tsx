@@ -15,7 +15,11 @@ export interface AuthContextType {
   loading: boolean;
   isConfigured: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (data: { username: string; email: string; password: string }) => Promise<void>;
+  signUp: (data: {
+    username: string;
+    email: string;
+    password: string;
+  }) => Promise<void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   uploadImage: (file: File) => Promise<string>;
@@ -23,7 +27,9 @@ export interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isConfigured, setIsConfigured] = useState(false);
@@ -61,7 +67,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signUp = async (data: { username: string; email: string; password: string }) => {
+  const signUp = async (data: {
+    username: string;
+    email: string;
+    password: string;
+  }) => {
     try {
       const response = await registerUser(data);
       setUser(response.user);
@@ -88,7 +98,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (!res.ok) {
       const errorData = await res.json();
-      throw new Error(errorData.message || "Error al solicitar cambio de contraseña");
+      throw new Error(
+        errorData.message || "Error al solicitar cambio de contraseña",
+      );
     }
   };
 
@@ -97,7 +109,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     formData.append("file", file);
     formData.append(
       "upload_preset",
-      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "",
     );
     formData.append("folder", "tu_carpeta");
 
@@ -106,7 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {
         method: "POST",
         body: formData,
-      }
+      },
     );
 
     if (!res.ok) throw new Error("Error al subir imagen a Cloudinary");

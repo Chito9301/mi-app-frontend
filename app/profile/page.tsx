@@ -51,7 +51,7 @@ export default function ProfilePage() {
   const handleReportUser = () => {
     if (confirm("¿Quieres reportar este perfil?")) {
       alert(
-        "Reporte de perfil enviado. Gracias por ayudarnos a mantener la comunidad segura."
+        "Reporte de perfil enviado. Gracias por ayudarnos a mantener la comunidad segura.",
       );
       // Aquí puedes implementar llamada al backend para reportar realmente
     }
@@ -111,8 +111,7 @@ export default function ProfilePage() {
               <Avatar className="h-20 w-20 border-4 border-purple-500">
                 <AvatarImage
                   src={
-                    typedUser?.photoURL ??
-                    `/placeholder.svg?height=80&width=80`
+                    typedUser?.photoURL ?? `/placeholder.svg?height=80&width=80`
                   }
                   alt={typedUser?.username ?? "@user"}
                 />
@@ -218,7 +217,10 @@ export default function ProfilePage() {
                 {loading ? (
                   <div className="grid grid-cols-3 gap-1">
                     {[1, 2, 3, 4, 5, 6].map((item) => (
-                      <Skeleton key={item} className="aspect-square bg-zinc-800" />
+                      <Skeleton
+                        key={item}
+                        className="aspect-square bg-zinc-800"
+                      />
                     ))}
                   </div>
                 ) : userMedia.length > 0 ? (
@@ -228,10 +230,10 @@ export default function ProfilePage() {
                         <Image
                           src={
                             item.type === "image"
-                              ? item.mediaUrl ??
-                                `/placeholder.svg?height=150&width=150`
-                              : item.thumbnailUrl ??
-                                `/placeholder.svg?height=150&width=150`
+                              ? (item.mediaUrl ??
+                                `/placeholder.svg?height=150&width=150`)
+                              : (item.thumbnailUrl ??
+                                `/placeholder.svg?height=150&width=150`)
                           }
                           alt={item.title}
                           fill

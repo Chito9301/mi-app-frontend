@@ -34,7 +34,10 @@ export default function PrivateChatPage() {
     const msg: PrivateMessage = {
       user: "Tú",
       text: input.trim(),
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     };
     socket.emit("private message", msg);
     setInput("");
@@ -45,17 +48,26 @@ export default function PrivateChatPage() {
       <h1 className="text-2xl font-semibold mb-6 text-center">Chat Privado</h1>
       <div className="flex-1 overflow-y-auto p-4 border rounded bg-white space-y-3">
         {messages.length === 0 && (
-          <p className="text-center text-gray-400 select-none">No hay mensajes aún. ¡Empieza la conversación!</p>
+          <p className="text-center text-gray-400 select-none">
+            No hay mensajes aún. ¡Empieza la conversación!
+          </p>
         )}
         {messages.map((msg, idx) => (
-          <div key={idx} className={`flex ${msg.user === "Tú" ? "justify-end" : "justify-start"}`}>
+          <div
+            key={idx}
+            className={`flex ${msg.user === "Tú" ? "justify-end" : "justify-start"}`}
+          >
             <div
               className={`max-w-[70%] px-4 py-2 rounded-lg shadow-sm ${
-                msg.user === "Tú" ? "bg-blue-600 text-white rounded-br-none" : "bg-gray-200 text-gray-900 rounded-bl-none"
+                msg.user === "Tú"
+                  ? "bg-blue-600 text-white rounded-br-none"
+                  : "bg-gray-200 text-gray-900 rounded-bl-none"
               }`}
             >
               <div className="text-sm break-words">{msg.text}</div>
-              <div className="mt-1 text-xs text-gray-300 text-right select-none">{msg.timestamp}</div>
+              <div className="mt-1 text-xs text-gray-300 text-right select-none">
+                {msg.timestamp}
+              </div>
             </div>
           </div>
         ))}
@@ -78,7 +90,11 @@ export default function PrivateChatPage() {
           placeholder="Escribe un mensaje privado..."
           autoComplete="off"
         />
-        <button type="submit" disabled={!input.trim()} className="btn-secondary">
+        <button
+          type="submit"
+          disabled={!input.trim()}
+          className="btn-secondary"
+        >
           Enviar
         </button>
       </form>

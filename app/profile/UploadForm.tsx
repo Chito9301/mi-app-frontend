@@ -34,7 +34,7 @@ export default function UploadForm() {
     formData.append("file", file);
     formData.append(
       "upload_preset",
-      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "",
     );
 
     try {
@@ -43,7 +43,7 @@ export default function UploadForm() {
         "POST",
         `https://api.cloudinary.com/v1_1/${
           process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-        }/auto/upload`
+        }/auto/upload`,
       );
 
       xhr.upload.onprogress = (event) => {

@@ -81,7 +81,8 @@ function useVerticalSwipe(onUp?: () => void, onDown?: () => void) {
 
     if (Math.abs(distance) < minSwipeDistance) return;
 
-    if (distance > 0) onUp?.(); // swipe up
+    if (distance > 0)
+      onUp?.(); // swipe up
     else onDown?.(); // swipe down
   }, [onUp, onDown]);
 
@@ -107,12 +108,14 @@ function InteractiveButton({
         size="icon"
         className={cn(
           "rounded-full bg-black/40 backdrop-blur-md h-9 w-9 transition-all duration-200 hover:scale-110 text-white",
-          isActive && activeColor
+          isActive && activeColor,
         )}
         onClick={onClick}
         type="button"
         aria-pressed={isActive ? "true" : "false"}
-        aria-label={ariaLabel || (typeof count === "number" ? `${count}` : `${count}`)}
+        aria-label={
+          ariaLabel || (typeof count === "number" ? `${count}` : `${count}`)
+        }
       >
         <Icon className="h-4 w-4" aria-hidden="true" />
       </Button>
@@ -146,11 +149,7 @@ function SafeVideo({
   );
 }
 
-function TopBar({
-  isConfigured,
-}: {
-  isConfigured: boolean;
-}) {
+function TopBar({ isConfigured }: { isConfigured: boolean }) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-transparent">
       <div className="flex items-center gap-2">
@@ -211,7 +210,9 @@ function TabSelector({
   offsetTop: "top-28" | "top-16";
 }) {
   return (
-    <div className={cn("fixed left-0 right-0 z-50 flex justify-center", offsetTop)}>
+    <div
+      className={cn("fixed left-0 right-0 z-50 flex justify-center", offsetTop)}
+    >
       <div className="flex bg-black/40 backdrop-blur-md rounded-full p-1">
         <button
           type="button"
@@ -220,7 +221,7 @@ function TabSelector({
             "px-4 py-1.5 rounded-full text-sm font-medium transition-colors",
             active === "challenge"
               ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white"
-              : "text-zinc-400 hover:text-zinc-200"
+              : "text-zinc-400 hover:text-zinc-200",
           )}
           aria-pressed={active === "challenge"}
         >
@@ -233,7 +234,7 @@ function TabSelector({
             "px-4 py-1.5 rounded-full text-sm font-medium transition-colors",
             active === "feed"
               ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white"
-              : "text-zinc-400 hover:text-zinc-200"
+              : "text-zinc-400 hover:text-zinc-200",
           )}
           aria-pressed={active === "feed"}
         >
@@ -450,18 +451,22 @@ export default function Home() {
   }, []);
 
   const currentMedia = trendingMedia[currentIndex];
-  const usernameFallback = (currentMedia?.username?.charAt(0) || "?").toUpperCase();
+  const usernameFallback = (
+    currentMedia?.username?.charAt(0) || "?"
+  ).toUpperCase();
 
   // Navegación: arriba/abajo
   const goNext = React.useCallback(() => {
     setCurrentIndex((prev) =>
-      trendingMedia.length > 0 ? (prev + 1) % trendingMedia.length : 0
+      trendingMedia.length > 0 ? (prev + 1) % trendingMedia.length : 0,
     );
   }, [trendingMedia.length]);
 
   const goPrev = React.useCallback(() => {
     setCurrentIndex((prev) =>
-      trendingMedia.length > 0 ? (prev - 1 + trendingMedia.length) % trendingMedia.length : 0
+      trendingMedia.length > 0
+        ? (prev - 1 + trendingMedia.length) % trendingMedia.length
+        : 0,
     );
   }, [trendingMedia.length]);
 
@@ -524,7 +529,11 @@ export default function Home() {
       <DemoWarning isConfigured={!!isConfigured} />
 
       {/* Selector de pestañas */}
-      <TabSelector active={activeTab} setActive={setActiveTab} offsetTop={tabOffsetTop} />
+      <TabSelector
+        active={activeTab}
+        setActive={setActiveTab}
+        offsetTop={tabOffsetTop}
+      />
 
       {/* Contenido principal estilo TikTok */}
       <main
@@ -565,16 +574,24 @@ export default function Home() {
                   priority
                 />
               ) : currentMedia?.type === "video" && currentMedia.mediaUrl ? (
-                <SafeVideo src={currentMedia.mediaUrl} className="absolute inset-0" />
+                <SafeVideo
+                  src={currentMedia.mediaUrl}
+                  className="absolute inset-0"
+                />
               ) : (
                 <div className="flex items-center justify-center h-full bg-gradient-to-b from-purple-900/20 to-black">
                   <div className="text-center">
-                    <Music className="h-16 w-16 text-purple-400 mx-auto mb-4" aria-hidden="true" />
+                    <Music
+                      className="h-16 w-16 text-purple-400 mx-auto mb-4"
+                      aria-hidden="true"
+                    />
                     <p className="text-xl font-bold">
                       {currentMedia?.title ?? "Audio no disponible"}
                     </p>
                     <div className="mt-4 bg-zinc-800 rounded-lg p-4">
-                      <p className="text-sm text-zinc-400">Audio no disponible en modo demo</p>
+                      <p className="text-sm text-zinc-400">
+                        Audio no disponible en modo demo
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -609,7 +626,10 @@ export default function Home() {
 
               <div className="flex items-center gap-2 mb-3">
                 <Avatar className="h-8 w-8 border-2 border-purple-500">
-                  <AvatarImage src="/placeholder.svg?height=32&width=32" alt="@challz" />
+                  <AvatarImage
+                    src="/placeholder.svg?height=32&width=32"
+                    alt="@challz"
+                  />
                   <AvatarFallback>CH</AvatarFallback>
                 </Avatar>
                 <p className="font-medium">@challz</p>
@@ -624,13 +644,15 @@ export default function Home() {
               </div>
 
               <p className="text-sm text-zinc-300 mb-3">
-                Muestra tus mejores pasos de baile con una canción nostálgica. ¡Sorprende a todos
-                con tu creatividad!
+                Muestra tus mejores pasos de baile con una canción nostálgica.
+                ¡Sorprende a todos con tu creatividad!
               </p>
 
               <div className="flex items-center gap-2 mb-3">
                 <Music className="h-4 w-4 text-zinc-400" aria-hidden="true" />
-                <p className="text-sm text-zinc-400">Música de los 90s - Challz Mix</p>
+                <p className="text-sm text-zinc-400">
+                  Música de los 90s - Challz Mix
+                </p>
               </div>
 
               <div className="flex gap-3">
@@ -666,14 +688,17 @@ export default function Home() {
                     <Avatar className="h-8 w-8 border-2 border-purple-500">
                       <AvatarImage
                         src={
-                          currentMedia.userPhotoURL || "/placeholder.svg?height=32&width=32"
+                          currentMedia.userPhotoURL ||
+                          "/placeholder.svg?height=32&width=32"
                         }
                         alt={currentMedia.username || "usuario"}
                       />
                       <AvatarFallback>{usernameFallback}</AvatarFallback>
                     </Avatar>
 
-                    <p className="font-medium">{currentMedia.username || "Usuario"}</p>
+                    <p className="font-medium">
+                      {currentMedia.username || "Usuario"}
+                    </p>
 
                     <Button
                       size="sm"
@@ -686,21 +711,24 @@ export default function Home() {
                   </div>
 
                   <p className="text-sm mb-2">
-                    {currentMedia.description || currentMedia.title || "Contenido"}
+                    {currentMedia.description ||
+                      currentMedia.title ||
+                      "Contenido"}
                   </p>
 
-                  {Array.isArray(currentMedia.hashtags) && currentMedia.hashtags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {currentMedia.hashtags.map((tag, index) => (
-                        <Badge
-                          key={`${tag}-${index}`}
-                          className="bg-zinc-800 hover:bg-zinc-700 text-white border-none text-xs"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
+                  {Array.isArray(currentMedia.hashtags) &&
+                    currentMedia.hashtags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {currentMedia.hashtags.map((tag, index) => (
+                          <Badge
+                            key={`${tag}-${index}`}
+                            className="bg-zinc-800 hover:bg-zinc-700 text-white border-none text-xs"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                 </>
               )}
             </div>

@@ -60,7 +60,11 @@ export default function LoginPage() {
     }
 
     try {
-      await signUp({ email: regEmail, password: regPassword, username: regUsername });
+      await signUp({
+        email: regEmail,
+        password: regPassword,
+        username: regUsername,
+      });
       router.push("/login"); // O redirige a dashboard si quieres login automático
     } catch (error: any) {
       setRegError(error.message || "Error al registrarse");
